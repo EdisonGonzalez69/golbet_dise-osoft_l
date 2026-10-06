@@ -22,5 +22,11 @@ public class MappingProfile : Profile
 
                        options => options.MapFrom(match => match.Bets.Count)); // origen 
 
+        CreateMap<Team, TeamDto>();
+
+        CreateMap<TeamFormDto, Team>().ReverseMap();
+
+        CreateMap<MatchFormDto, Match>().ReverseMap();
+
     }
 }
