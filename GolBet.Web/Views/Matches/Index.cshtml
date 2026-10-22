@@ -7,56 +7,72 @@
 }
 
 @{
-
     var current = (MatchStatus?)ViewBag.CurrentStatus;
-
 }
 
 <div class="d-flex gap-2 flex-wrap mb-4">
-
     <a asp-action="Index"
        class="btn btn-sm @(current is null ? "btn-success" : "btn-outline-success")">
-
         Todos
-
     </a>
 
     <a asp-action="Index" asp-route-status="@MatchStatus.Scheduled"
        class="btn btn-sm @(current == MatchStatus.Scheduled ? "btn-success" : "btn-outline-success")">
-
         Programados
-
     </a>
 
     <a asp-action="Index" asp-route-status="@MatchStatus.InProgress"
        class="btn btn-sm @(current == MatchStatus.InProgress ? "btn-success" : "btn-outline-success")">
-
         En juego
-
     </a>
 
     <a asp-action="Index" asp-route-status="@MatchStatus.Finished"
        class="btn btn-sm @(current == MatchStatus.Finished ? "btn-success" : "btn-outline-success")">
-
         Finalizados
-
     </a>
-
 </div>
 
 
-<div class="d-flex justify-content-between align-items-center mb-4">
+<!-- MODIFICACIÓN                                                -->
+<!-- Se añade el formulario de búsqueda por equipo.                                            -->
+<!-- 1. Método 'get' para enviar el parámetro 'search' a la acción Index del controlador.       -->
+<!-- 2. Se conserva el filtro de estado actual mediante un input hidden si ya estaba activo.   -->
+<!-- 3. Se recupera el texto escrito usando ViewBag.CurrentSearch en el value del input.       -->
+<!-- ----------------------------------------------------------------------------------------- -->
+<form method="get" asp-action="Index" class="mb-4">
+    <div class="input-group">
+        <!-- Mantener el estado actual al buscar para que ambos filtros convivan -->
+        @if (ViewBag.CurrentStatus != null)
+        {
+            <input type="hidden" name="status" value="@ViewBag.CurrentStatus" />
+        }
 
+        <!-- Caja de texto del buscador -->
+        <input type="text"
+               name="search"
+               value="@ViewBag.CurrentSearch"
+               placeholder="Buscar por equipo (Local o Visitante)..."
+               class="form-control" />
+
+        <!-- Botón de ejecución de búsqueda -->
+        <button type="submit" class="btn btn-success">Buscar</button>
+
+        <!-- Botón para limpiar la búsqueda si hay texto escrito -->
+        @if (!string.IsNullOrWhiteSpace(ViewBag.CurrentSearch as string))
+        {
+            <a asp-action="Index" asp-route-status="@ViewBag.CurrentStatus" class="btn btn-outline-secondary">Limpiar</a>
+        }
+    </div>
+</form>
+<!-- ========================================================================================= -->
+
+<div class="d-flex justify-content-between align-items-center mb-4">
     <h2>⚽ Cartelera de partidos</h2>
 
-    @if (User.IsInRole("Admin")) 
-
-{ 
-
-    <a asp-action="Create" class="btn btn-success">+ Nuevo partido</a> 
-
-} 
-
+    @if (User.IsInRole("Admin"))
+    {
+        <a asp-action="Create" class="btn btn-success">+ Nuevo partido</a>
+    }
 </div>
 
 <div class="row row-cols-1 row-cols-md-2 row-cols-xl-3 g-4">
@@ -132,13 +148,14 @@
                     </div>
                     <a asp-action="Detail" asp-route-id="@match.Id"
                        class="btn btn-sm btn-outline-secondary w-100 mt-2">
-
                         Ver detalle
-
                     </a>
-
                 </div>
             </div>
         </div>
     }
-    </div>
+</div>
+
+
+
+

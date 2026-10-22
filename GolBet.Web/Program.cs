@@ -62,7 +62,8 @@ builder.Services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepositor
 
 // Specific repositories
 builder.Services.AddScoped<IMatchRepository, MatchRepository>();
-builder.Services.AddScoped<ITeamService, TeamService>(); 
+builder.Services.AddScoped<IBetRepository, BetRepository>();
+
 
 
 
@@ -71,6 +72,8 @@ builder.Services.AddAutoMapper(typeof(MappingProfile));
 
 // Business services
 builder.Services.AddScoped<IMatchService, MatchService>();
+builder.Services.AddScoped<ITeamService, TeamService>();
+builder.Services.AddScoped<IBetService, BetService>();
 
 
 
